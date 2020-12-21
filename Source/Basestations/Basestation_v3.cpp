@@ -93,7 +93,7 @@ bool Basestation_v3::open()
 
 	std::cout << "Opening bs on slot: " << slot << " errorCode: " << errorCode << std::endl;
 
-	if (errorCode == np::VERSION_MISMATCH)
+	if (errorCode == Neuropixels::VERSION_MISMATCH)
 	{
 		return false;
 	}
@@ -115,7 +115,7 @@ bool Basestation_v3::open()
 
 			std::cout << "Detecting headstage on slot: " << slot << " port: " << port << " detected: " << detected << " errorCode: " << errorCode << std::endl;
 
-			if (detected && errorCode == np::SUCCESS)
+			if (detected && errorCode == Neuropixels::SUCCESS)
 			{
 				char pn[MAXLEN];
 				Neuropixels::readHSPN(slot, port, pn, MAXLEN);
@@ -183,7 +183,7 @@ void Basestation_v3::initialize()
 
 	if (!probesInitialized)
 	{
-		//errorCode = Neuropixels::setTriggerInput(slot, np::TRIGIN_SW);
+		//errorCode = Neuropixels::setTriggerInput(slot, Neuropixels::TRIGIN_SW);
 
 		for (auto probe : probes)
 		{

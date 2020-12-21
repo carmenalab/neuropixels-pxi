@@ -114,7 +114,7 @@ void Neuropixels1_v3::initialize()
 	errorCode = Neuropixels::openProbe(basestation->slot, headstage->port, dock);
 	std::cout << "openProbe: slot: " << basestation->slot << " port: " << headstage->port << " dock: " << dock << " errorCode: " << errorCode << std::endl;
 
-	if (errorCode == np::SUCCESS)
+	if (errorCode == Neuropixels::SUCCESS)
 	{
 		std::cout << "Configuring probe..." << std::endl;
 		errorCode = Neuropixels::setOPMODE(basestation->slot, headstage->port, dock, Neuropixels::RECORDING);
@@ -203,7 +203,7 @@ void Neuropixels1_v3::selectElectrodes(ProbeSettings settings, bool shouldWriteC
 		{
 			ec = Neuropixels::writeProbeConfiguration(basestation->slot, headstage->port, dock, false);
 
-			if (!ec == np::SUCCESS)
+			if (!ec == Neuropixels::SUCCESS)
 				std::cout << "Failed to write channel config " << std::endl;
 			else
 				std::cout << "Successfully wrote channel config " << std::endl;
@@ -217,9 +217,10 @@ void Neuropixels1_v3::setApFilterState(bool filterIsOn, bool shouldWriteConfigur
 	if (apFilterState != filterIsOn)
 	{
 		for (int channel = 0; channel < 384; channel++)
-			np::setAPCornerFrequency(basestation->slot,
+			Neuropixels::setAPCornerFrequency(basestation->slot,
 				headstage->port,
 				dock,
+				channel,
 				!filterIsOn); // true if disabled
 
 		if (shouldWriteConfiguration)
@@ -340,7 +341,7 @@ void Neuropixels1_v3::run()
 			&count,
 			count);
 
-		if (errorCode == np::SUCCESS &&
+		if (errorCode == Neuropixels::SUCCESS &&
 			count > 0)
 		{
 			float apSamples[385];
@@ -372,12 +373,13 @@ void Neuropixels1_v3::run()
 
 					if (ap_timestamp % 30000 == 0)
 					{
-						size_t packetsAvailable;
-						size_t headroom;
+						int packetsAvailable;
+						int headroom;
 
-						np::getElectrodeDataFifoState(
+						Neuropixels::getElectrodeDataFifoState(
 							basestation->slot,
 							headstage->port,
+							dock,
 							&packetsAvailable,
 							&headroom);
 
@@ -398,7 +400,7 @@ void Neuropixels1_v3::run()
 			}
 
 		}
-		else if (errorCode != np::SUCCESS)
+		else if (errorCode != Neuropixels::SUCCESS)
 		{
 			std::cout << "Error code: " << errorCode << "for Basestation " << int(basestation->slot) << ", probe " << int(headstage->port) << std::endl;
 		}

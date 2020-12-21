@@ -55,11 +55,6 @@ NeuropixThread::NeuropixThread(SourceNode* sn) :
 	defaultSyncFrequencies.add(1);
 	defaultSyncFrequencies.add(10);
 
-	uint32_t availableslotmask;
-
-	std::vector<int> slotsToCheck;
-	np::scanPXI(&availableslotmask);
-
 	api_v1.isActive = false;
 	api_v3.isActive = true;
 
@@ -102,6 +97,12 @@ NeuropixThread::NeuropixThread(SourceNode* sn) :
 
 	if (basestations.size() == 0) // no basestations with API version match
 	{
+
+		uint32_t availableslotmask;
+		std::vector<int> slotsToCheck;
+
+		np::scanPXI(&availableslotmask);
+
 		for (int slot = 0; slot < 32; slot++)
 		{
 			if ((availableslotmask >> slot) & 1)
@@ -221,10 +222,10 @@ void NeuropixThread::applyProbeSettingsQueue()
 
 		if (settings.probe != nullptr)
 		{
-			settings.probe->selectElectrodes(settings, false);
-			settings.probe->setAllGains(settings.apGainIndex, settings.lfpGainIndex, false);
-			settings.probe->setAllReferences(settings.referenceIndex, false);
-			settings.probe->setApFilterState(settings.apFilterState, false);
+			//settings.probe->selectElectrodes(settings, false);
+			//settings.probe->setAllGains(settings.apGainIndex, settings.lfpGainIndex, false);
+			//settings.probe->setAllReferences(settings.referenceIndex, false);
+			//settings.probe->setApFilterState(settings.apFilterState, false);
 			settings.probe->writeConfiguration();
 
 			settings.probe->setStatus(ProbeStatus::CONNECTED);

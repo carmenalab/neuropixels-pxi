@@ -164,9 +164,10 @@ void Neuropixels_NHP_Passive::setApFilterState(bool filterIsOn, bool shouldWrite
 	if (apFilterState != filterIsOn)
 	{
 		for (int channel = 0; channel < 128; channel++)
-			np::setAPCornerFrequency(basestation->slot,
+			Neuropixels::setAPCornerFrequency(basestation->slot,
 				headstage->port,
 				dock,
+				channel,
 				!filterIsOn); // true if disabled
 
 		if (shouldWriteConfiguration)
@@ -275,7 +276,7 @@ void Neuropixels_NHP_Passive::run()
 			&count,
 			count);
 
-		if (errorCode == np::SUCCESS &&
+		if (errorCode == Neuropixels::SUCCESS &&
 			count > 0)
 		{
 			float apSamples[129];
@@ -307,12 +308,13 @@ void Neuropixels_NHP_Passive::run()
 
 					if (ap_timestamp % 30000 == 0)
 					{
-						size_t packetsAvailable;
-						size_t headroom;
+						int packetsAvailable;
+						int headroom;
 
-						np::getElectrodeDataFifoState(
+						Neuropixels::getElectrodeDataFifoState(
 							basestation->slot,
 							headstage->port,
+							dock,
 							&packetsAvailable,
 							&headroom);
 
@@ -333,7 +335,7 @@ void Neuropixels_NHP_Passive::run()
 			}
 
 		}
-		else if (errorCode != np::SUCCESS)
+		else if (errorCode != Neuropixels::SUCCESS)
 		{
 			std::cout << "Error code: " << errorCode << "for Basestation " << int(basestation->slot) << ", probe " << int(headstage->port) << std::endl;
 		}

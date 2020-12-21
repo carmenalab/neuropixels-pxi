@@ -202,7 +202,7 @@ void Neuropixels2::selectElectrodes(ProbeSettings settings, bool shouldWriteConf
 	{
 		ec = Neuropixels::writeProbeConfiguration(basestation->slot, headstage->port, dock, false);
 
-		if (!ec == np::SUCCESS)
+		if (!ec == Neuropixels::SUCCESS)
 			std::cout << "Failed to write channel config " << std::endl;
 		else
 			std::cout << "Successfully wrote channel config " << std::endl;
@@ -392,7 +392,7 @@ void Neuropixels2::run()
 			count,
 			&count);
 
-		if (errorCode == np::SUCCESS && count > 0)
+		if (errorCode == Neuropixels::SUCCESS && count > 0)
 		{
 			float apSamples[385];
 
@@ -417,12 +417,13 @@ void Neuropixels2::run()
 
 				if (ap_timestamp % 30000 == 0)
 				{
-					size_t packetsAvailable;
-					size_t headroom;
+					int packetsAvailable;
+					int headroom;
 
-					np::getElectrodeDataFifoState(
+					Neuropixels::getElectrodeDataFifoState(
 						basestation->slot,
 						headstage->port,
+						dock,
 						&packetsAvailable,
 						&headroom);
 
@@ -434,7 +435,7 @@ void Neuropixels2::run()
 			}
 
 		}
-		else if (errorCode != np::SUCCESS)
+		else if (errorCode != Neuropixels::SUCCESS)
 		{
 			std::cout << "Error code: " << errorCode << "for Basestation " << int(basestation->slot) << ", probe " << int(headstage->port) << std::endl;
 		}

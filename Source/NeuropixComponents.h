@@ -168,7 +168,7 @@ class NeuropixAPIv1 : public NeuropixComponent
 public:
 	NeuropixAPIv1::NeuropixAPIv1()
 	{
-		getInfo();
+		//getInfo();
 		isActive = false;
 	}
 
