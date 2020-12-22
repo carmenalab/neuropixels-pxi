@@ -244,7 +244,7 @@ private:
 
 	OwnedArray<Basestation> basestations;
 
-	NeuropixAPIv1 api_v1;
+	//NeuropixAPIv1 api_v1;
 	NeuropixAPIv3 api_v3;
 
 	//unsigned char selectedSlot;

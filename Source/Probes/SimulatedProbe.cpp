@@ -143,12 +143,12 @@ void SimulatedProbe::initialize()
 	lfp_timestamp = 0;
 	eventCode = 0;
 	setStatus(ProbeStatus::CONNECTED);
-	Sleep(200);
+	//Sleep(200);
 }
 
 void SimulatedProbe::calibrate()
 {
-	Sleep(1);
+	//Sleep(1);
 	std::cout << "Calibrating simulated probe." << std::endl;
 }
 
@@ -184,7 +184,7 @@ void SimulatedProbe::setAllReferences(int referenceIndex, bool shouldWriteConfig
 
 void SimulatedProbe::writeConfiguration()
 {
-	Sleep(1000);
+	//Sleep(1000);
 
 	std::cout << "Wrote configuration for simulated probe." << std::endl;
 	
@@ -207,7 +207,7 @@ void SimulatedProbe::run()
 
 		if (1) // every 1/300 s
 		{
-			Sleep(3);
+			//Sleep(3);
 
 			float apSamples[384];
 			float lfpSamples[384];

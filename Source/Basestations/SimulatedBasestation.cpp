@@ -159,7 +159,7 @@ void SimulatedBasestation::run()
 	for (int i = 0; i < 20; i++)
 	{
 		setProgress(0.05 * i);
-		Sleep(100);
+		//Sleep(100);
 	}
 
 }

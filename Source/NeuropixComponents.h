@@ -28,7 +28,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <stdio.h>
 #include <string.h>
 
-#include "API/v1/NeuropixAPI.h"
+//#include "API/v1/NeuropixAPI.h"
 #include "API/v3/NeuropixAPI.h"
 
 # define SAMPLECOUNT 64
@@ -163,6 +163,7 @@ public:
 };
 
 /** Holds info about APIv1, as well as a boolean value to indicate whether or not it is being used*/
+/*
 class NeuropixAPIv1 : public NeuropixComponent
 {
 public:
@@ -183,6 +184,7 @@ public:
 
 	bool isActive;
 };
+*/
 
 /** Holds info about APIv3, as well as a boolean value to indicate whether or not it is being used*/
 class NeuropixAPIv3 : public NeuropixComponent

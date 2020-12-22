@@ -24,7 +24,7 @@
 #include "NeuropixThread.h"
 #include "NeuropixEditor.h"
 
-#include "Basestations/Basestation_v1.h"
+//#include "Basestations/Basestation_v1.h"
 #include "Basestations/Basestation_v3.h"
 #include "Basestations/SimulatedBasestation.h"
 
@@ -55,7 +55,7 @@ NeuropixThread::NeuropixThread(SourceNode* sn) :
 	defaultSyncFrequencies.add(1);
 	defaultSyncFrequencies.add(10);
 
-	api_v1.isActive = false;
+	//api_v1.isActive = false;
 	api_v3.isActive = true;
 
 	Neuropixels::scanBS();
@@ -94,7 +94,7 @@ NeuropixThread::NeuropixThread(SourceNode* sn) :
 		}
 	}
 
-
+	/*
 	if (basestations.size() == 0) // no basestations with API version match
 	{
 
@@ -124,7 +124,7 @@ NeuropixThread::NeuropixThread(SourceNode* sn) :
 			}
 		}
 	}
-
+	*/
 
 	std::cout << "Num basestations: " << basestations.size() << std::endl;
 
@@ -244,15 +244,8 @@ void NeuropixThread::initialize()
 		basestation->initialize(); // prepares probes for acquisition; may be slow
 	}
 
-	if (api_v1.isActive)
-	{
-		np::setParameter(np::NP_PARAM_BUFFERSIZE, MAXSTREAMBUFFERSIZE);
-		np::setParameter(np::NP_PARAM_BUFFERCOUNT, MAXSTREAMBUFFERCOUNT);
-	}
-	else {
-		Neuropixels::setParameter(Neuropixels::NP_PARAM_BUFFERSIZE, MAXSTREAMBUFFERSIZE);
-		Neuropixels::setParameter(Neuropixels::NP_PARAM_BUFFERCOUNT, MAXSTREAMBUFFERCOUNT);
-	}
+	Neuropixels::setParameter(Neuropixels::NP_PARAM_BUFFERSIZE, 1024*1024*32);
+	Neuropixels::setParameter(Neuropixels::NP_PARAM_BUFFERCOUNT, 1024);
 
 	initializationComplete = true;
 	
@@ -287,10 +280,7 @@ Array<Probe*> NeuropixThread::getProbes()
 
 String NeuropixThread::getApiVersion()
 {
-	if (api_v1.isActive)
-		return api_v1.info.version;
-	else
-		return api_v3.info.version;
+	return api_v3.info.version;
 }
 
 void NeuropixThread::setMainSync(int slotIndex)
@@ -338,10 +328,7 @@ XmlElement NeuropixThread::getInfoXml()
 
 	XmlElement* api_info = new XmlElement("API");
 
-	if (api_v1.isActive)
-		api_info->setAttribute("version", api_v1.info.version);
-	else
-		api_info->setAttribute("version", api_v3.info.version);
+	api_info->setAttribute("version", api_v3.info.version);
 
 	neuropix_info.addChildElement(api_info);
 
@@ -386,10 +373,7 @@ String NeuropixThread::getInfoString()
 	String infoString;
 
 	infoString += "API Version: ";
-	if (api_v1.isActive)
-		infoString += api_v1.info.version;
-	else
-		infoString += api_v3.info.version;
+	infoString += api_v3.info.version;
 	infoString += "\n";
 	infoString += "\n";
 	infoString += "\n";
@@ -504,16 +488,8 @@ void NeuropixThread::startRecording()
 
 				File npxFileName = fullPath.getChildFile("recording_slot" + String(basestations[i]->slot) + "_" + String(recordingNumber) + ".npx2");
 
-				if (api_v1.isActive)
-				{
-					np::setFileStream(basestations[i]->slot, npxFileName.getFullPathName().getCharPointer());
-					np::enableFileStream(basestations[i]->slot, true);
-				}
-				else {
-					Neuropixels::setFileStream(basestations[i]->slot, npxFileName.getFullPathName().getCharPointer());
-					Neuropixels::enableFileStream(basestations[i]->slot, true);
-				}
-				
+				Neuropixels::setFileStream(basestations[i]->slot, npxFileName.getFullPathName().getCharPointer());
+				Neuropixels::enableFileStream(basestations[i]->slot, true);
 
 				std::cout << "Basestation " << i << " started recording." << std::endl;
 			}
@@ -553,10 +529,7 @@ void NeuropixThread::stopRecording()
 {
 	for (int i = 0; i < basestations.size(); i++)
 	{
-		if (api_v1.isActive)
-			np::enableFileStream(basestations[i]->slot_c, false);
-		else
-			Neuropixels::enableFileStream(basestations[i]->slot, false);
+		Neuropixels::enableFileStream(basestations[i]->slot, false);
 	}
 
 	std::cout << "NeuropixThread stopped recording." << std::endl;

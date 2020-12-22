@@ -26,7 +26,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include "../NeuropixComponents.h"
 
-#include "../API/v1/NeuropixAPI.h"
+//#include "../API/v1/NeuropixAPI.h"
 #include "../API/v3/NeuropixAPI.h"
 
 # define SAMPLECOUNT 64
