@@ -194,7 +194,7 @@ public:
 class Headstage : public NeuropixComponent
 {
 public:
-	Headstage::Headstage(Probe*);
+	Headstage(Probe*);
 	Probe* probe;
 	void getInfo();
 };
@@ -202,7 +202,7 @@ public:
 class Flex : public NeuropixComponent
 {
 public:
-	Flex::Flex(Probe*);
+	Flex(Probe*);
 	Probe* probe;
 	void getInfo();
 };
@@ -225,7 +225,7 @@ class HeadstageTestModule : public NeuropixComponent
 {
 public:
 
-	HeadstageTestModule::HeadstageTestModule(Basestation* bs, signed char port);
+	HeadstageTestModule(Basestation* bs, signed char port);
 
 	void getInfo();
 

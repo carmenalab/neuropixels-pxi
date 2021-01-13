@@ -49,13 +49,15 @@ target_include_directories(${PLUGIN_NAME} PUBLIC ${GUI_BASE_DIR}/JuceLibraryCode
 
 set(GUI_BIN_DIR ${GUI_BASE_DIR}/Build/${CONFIGURATION_FOLDER})
 
-if (NOT CMAKE_LIBRARY_ARCHITECTURE)
-	if (CMAKE_SIZEOF_VOID_P EQUAL 8)
-		set(CMAKE_LIBRARY_ARCHITECTURE "x64")
-		set(NEUROPIX_LINK_DIR ${CMAKE_CURRENT_SOURCE_DIR}/Source/neuropix-api/lib64/NeuropixAPI_x64_1_17.lib)
-	else()
-		set(CMAKE_LIBRARY_ARCHITECTURE "x86")
-		set(NEUROPIX_LINK_DIR ${CMAKE_CURRENT_SOURCE_DIR}/Source/neuropix-api/lib32/NeuropixAPI_x86_1_17.lib)
+if (MSVC)
+	if (NOT CMAKE_LIBRARY_ARCHITECTURE)
+		if (CMAKE_SIZEOF_VOID_P EQUAL 8)
+			set(CMAKE_LIBRARY_ARCHITECTURE "x64")
+			set(NEUROPIX_LINK_DIR ${CMAKE_CURRENT_SOURCE_DIR}/Source/neuropix-api/lib64/NeuropixAPI_x64_1_17.lib)
+		else()
+			set(CMAKE_LIBRARY_ARCHITECTURE "x86")
+			set(NEUROPIX_LINK_DIR ${CMAKE_CURRENT_SOURCE_DIR}/Source/neuropix-api/lib32/NeuropixAPI_x86_1_17.lib)
+		endif()
 	endif()
 endif()
 
@@ -69,12 +71,13 @@ if(MSVC)
 	set(CMAKE_PREFIX_PATH ${CMAKE_CURRENT_SOURCE_DIR}/../libs)
 elseif(LINUX)
 	target_link_libraries(${PLUGIN_NAME} GL X11 Xext Xinerama asound dl freetype pthread rt)
-	set_property(TARGET ${PLUGIN_NAME} APPEND_STRING PROPERTY LINK_FLAGS
-		"-fvisibility=hidden -fPIC -rdynamic -Wl,-rpath,'$$ORIGIN/../shared'")
+	set_property(TARGET ${PLUGIN_NAME} APPEND_STRING PROPERTY LINK_FLAGS "-fvisibility=hidden -fPIC -rdynamic -Wl,-rpath,'$$ORIGIN/../shared'")
 	target_compile_options(${PLUGIN_NAME} PRIVATE -fPIC -rdynamic)
 	target_compile_options(${PLUGIN_NAME} PRIVATE -O3) #enable optimization for linux debug
 	
 	install(TARGETS ${PLUGIN_NAME} LIBRARY DESTINATION ${GUI_BIN_DIR}/plugins)
+	set(CMAKE_PREFIX_PATH ${CMAKE_CURRENT_SOURCE_DIR}/libs/linux)
+
 elseif(APPLE)
 	set_target_properties(${PLUGIN_NAME} PROPERTIES BUNDLE TRUE)
 	set_property(TARGET ${PLUGIN_NAME} APPEND_STRING PROPERTY LINK_FLAGS
@@ -93,15 +96,9 @@ foreach( src_file IN ITEMS ${SRC_FILES})
 	source_group("${group_name}" FILES "${src_file}")
 endforeach()
 
-set(NEUROPIX_INCLUDE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/Source/neuropix-api)
-target_include_directories(${PLUGIN_NAME} PRIVATE ${NEUROPIX_INCLUDE_DIR})
-target_link_libraries(${PLUGIN_NAME} ${NEUROPIX_LINK_DIR})
+#set(NEUROPIX_INCLUDE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/Source/neuropix-api)
+#target_include_directories(${PLUGIN_NAME} PRIVATE ${NEUROPIX_INCLUDE_DIR})
+#target_link_libraries(${PLUGIN_NAME} ${NEUROPIX_LINK_DIR})
 
-#additional libraries, if needed
-#find_package(LIBNAME)
-#or
-#find_library(LIBNAME_LIBRARIES NAMES libname)
-#find_path(LIBNAME_INCLUDE_DIRS includefile.h)
-#
-#target_link_libraries(${PLUGIN_NAME} ${LIBNAME_LIBRARIES})
-#target_include_directories(${PLUGIN_NAME} PRIVATE ${LIBNAME_INCLUDE_DIRS})
+set(NPX_INCLUDE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/libs/linux/include)
+target_include_directories(${PLUGIN_NAME} PUBLIC ${NPX_INCLUDE_DIR})

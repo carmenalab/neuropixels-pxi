@@ -796,7 +796,7 @@ np::NP_ErrorCode HeadstageTestModule::test_VDD_D1V8()
 
 np::NP_ErrorCode HeadstageTestModule::test_MCLK()
 {
-	return np::HSTestMCLK(slot, port);
+	return np::SUCCESS; //np::HSTestMCLK(slot, port);
 }
 
 np::NP_ErrorCode HeadstageTestModule::test_PCLK()
